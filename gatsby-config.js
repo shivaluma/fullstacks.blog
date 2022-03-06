@@ -3,7 +3,7 @@ module.exports = {
     title: `The Fullstacks`,
     author: {
       name: `Viet Thanh`,
-      summary: `Dev culi thích tìm hiểu mọi thứ.`,
+      summary: `Dev culi thích tìm hiểu mọi thứ trên trời dưới đất.`,
     },
     description: `Dev culi thích tìm hiểu mọi thứ.`,
     siteUrl: `https://fullstacks.blog/`,
