@@ -1,7 +1,7 @@
 ---
 title: 2022 rồi, setup macOS như thế nào để code cho xịn xò
 date: "2022-03-07"
-description: .
+description: Vì Dev thường là những người lười biếng nên việc sử dụng các tool, công cụ hữu ích sẽ giúp rất nhiều cho công việc. 
 tags: ["macOS", "unix"]
 ---
 
