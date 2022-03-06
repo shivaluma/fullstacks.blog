@@ -128,6 +128,15 @@ module.exports = {
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // `gatsby-plugin-offline`,
-    `gatsby-plugin-sitemap`
+    
+    { resolve: `gatsby-plugin-sitemap`, output: '/sitemap.xml' },
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: 'https://www.fullstacks.blog',
+        sitemap: 'https://www.fullstacks.blog/sitemap/sitemap-index.xml',
+        policy: [{userAgent: '*', allow: '/'}]
+      }
+    }
   ],
 }
