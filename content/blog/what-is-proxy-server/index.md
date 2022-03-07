@@ -2,7 +2,7 @@
 title: Proxy Server là gì ?
 date: "2022-03-07"
 description: Tản mạn về Proxy Server.
-tags: ["network"]
+tags: ["network", "system design"]
 ---
 
 "Proxy" có nghĩa là một cá nhân hay một công cụ nào đó đứng giữa và thay mặt cho những vật khác. 

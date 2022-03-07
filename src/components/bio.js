@@ -53,7 +53,7 @@ const Bio = ({header}) => {
 
       <section className="py-4 w-full flex flex-col items-end">
         <div className="header-top"></div>
-        <Link to="/rss"><div className="py-1">RSS</div></Link>
+        <Link to="/rss.xml"><div className="py-1">RSS</div></Link>
         <Link to="http://github.com/shivaluma"><div className="py-1">Github</div></Link>
         <Link to="http://linkedin.com/shivaluma"><div className="py-1">LinkedIn</div></Link>
         <Link to="http://facebook.com/shiro.nvthanh"><div className="py-1">Facebook</div></Link>
