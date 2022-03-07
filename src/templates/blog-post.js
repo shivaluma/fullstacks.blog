@@ -1,7 +1,6 @@
 import * as React from "react"
 import { Link, graphql } from "gatsby"
 
-import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 
@@ -30,7 +29,6 @@ const BlogPostTemplate = ({ data, location }) => {
         description={post.frontmatter.description || post.excerpt}
       />
       <article
-        className="blog-post"
         itemScope
         className="container max-w-2xl mt-16"
         itemType="http://schema.org/Article"
@@ -45,6 +43,7 @@ const BlogPostTemplate = ({ data, location }) => {
           <p>{post.frontmatter.date}</p>
         </header>
         <section
+          className="markdown-body"
           dangerouslySetInnerHTML={{ __html: post.html }}
           itemProp="articleBody"
         />
