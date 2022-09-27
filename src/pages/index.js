@@ -22,7 +22,7 @@ const BlogIndex = ({ data, location }) => {
 
   return (
     <Layout className="flex" location={location} title={siteTitle}>
-      <Seo title="Thanh's Blog" />
+      <Seo title="Fullstack blog" />
       <ol className="list-style-none">
         {posts.map(post => {
           const title = post.frontmatter.title || post.fields.slug
