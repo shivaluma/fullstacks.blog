@@ -18,7 +18,7 @@ const BlogPostTemplate = ({ data, location }) => {
       scriptEl.setAttribute("async", true);
       scriptEl.setAttribute("repo", "shivaluma/comments");
       scriptEl.setAttribute("issue-term", "pathname");
-      scriptEl.setAttribute( "theme", "github-light");
+      scriptEl.setAttribute( "theme", "github-dark");
       commentBox.current.appendChild(scriptEl);
   }, [])
 
@@ -35,7 +35,7 @@ const BlogPostTemplate = ({ data, location }) => {
       >
 
         <Link to="/" rel="home">
-          <div className="mb-4">← Quay về trang chủ</div>
+          <div className="mb-4 text-gray-300">← Back to homepage</div>
         </Link>
 
         <header>
@@ -58,14 +58,14 @@ const BlogPostTemplate = ({ data, location }) => {
         >
           <li>
             {previous && (
-              <Link to={previous.fields.slug} rel="prev">
+              <Link to={previous.fields.slug} rel="prev" className="text-gray-300">
                 ← {previous.frontmatter.title}
               </Link>
             )}
           </li>
           <li>
             {next && (
-              <Link to={next.fields.slug} rel="next">
+              <Link to={next.fields.slug} rel="next" className="text-gray-200">
                 {next.frontmatter.title} →
               </Link>
             )}
@@ -74,7 +74,7 @@ const BlogPostTemplate = ({ data, location }) => {
       </nav>
 
       <section>
-        <span className="text-base text-gray-800 font-medium center">Bạn nghĩ như thế nào về bài viết này? </span>
+
         <div ref={commentBox} className="comments" />
       </section>
     </Layout>

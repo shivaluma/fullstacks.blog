@@ -30,10 +30,10 @@ const Bio = ({header}) => {
   const author = data.site.siteMetadata?.author
 
   return (
-    <div className="flex flex-col items-end">
+    <div className="flex flex-col items-end flex-1 pb-8 h-full">
       
       <StaticImage
-        className="bio-avatar"
+        className="bio-avatar shrink-0"
         layout="fixed"
         formats={["auto", "webp", "avif"]}
         src="../images/avt.png"
@@ -44,19 +44,19 @@ const Bio = ({header}) => {
       />
 
       <header>{header}</header>  
-      <span className="font-bold text-gray-500 mb-5">By {author?.name}</span>
+      <span className="font-bold text-gray-300 mb-5">By {author?.name}</span>
       {author?.name && (
-        <p className="text-right text-sm ml-6">
+        <p className="text-right text-sm ml-6 text-gray-200">
           {author?.summary || null}
         </p>
       )}
 
-      <section className="py-4 w-full flex flex-col items-end">
+      <section className="py-4 w-full flex flex-col items-end ">
         <div className="header-top"></div>
-        <Link to="/rss.xml"><div className="py-1">RSS</div></Link>
-        <Link to="http://github.com/shivaluma"><div className="py-1">Github</div></Link>
-        <Link to="http://linkedin.com/shivaluma"><div className="py-1">LinkedIn</div></Link>
-        <Link to="http://facebook.com/shiro.nvthanh"><div className="py-1">Facebook</div></Link>
+        <Link to="/rss.xml"><div className="py-1 text-blue-200">RSS</div></Link>
+        <Link to="http://github.com/shivaluma"><div className="py-1 text-blue-200">Github</div></Link>
+        <Link to="http://linkedin.com/shivaluma"><div className="py-1 text-blue-200">LinkedIn</div></Link>
+        <Link to="http://facebook.com/shiro.nvthanh"><div className="py-1 text-blue-200">Facebook</div></Link>
       </section>
     </div>
   )

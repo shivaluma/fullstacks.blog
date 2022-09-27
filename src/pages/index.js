@@ -36,12 +36,12 @@ const BlogIndex = ({ data, location }) => {
               >
                 <header>
                   <small className="flex items-center">
-                    <time className="text-gray-500">{post.frontmatter.date}</time> 
-                    <span className="ml-2">{post.frontmatter.tags.join(', ')}</span>
+                    <time className="text-gray-400">{post.frontmatter.date}</time> 
+                    <span className="ml-2 text-zinc-300">{post.frontmatter.tags.join(', ')}</span>
                   </small>
                   <h2 className="flex">
                     <Link to={post.fields.slug} itemProp="url">
-                      <span className="text-base font-medium" itemProp="headline">{title}</span>
+                      <span className="text-base font-medium text-gray-200" itemProp="headline">{title}</span>
                     </Link>
                   </h2>
                 </header>

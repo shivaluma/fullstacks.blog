@@ -3,13 +3,11 @@ module.exports = {
     title: `The Fullstacks`,
     author: {
       name: `Viet Thanh`,
-      summary: `Dev culi thích tìm hiểu mọi thứ trên trời dưới đất.`,
+      summary: `Look like you have found my space on the internet.`,
     },
-    description: `Dev culi thích tìm hiểu mọi thứ.`,
+    description: `Look like you have found my space on the internet.`,
     siteUrl: `https://fullstacks.blog/`,
-    social: {
-
-    },
+    social: {},
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -130,12 +128,26 @@ module.exports = {
     // `gatsby-plugin-offline`,
     `gatsby-plugin-sitemap`,
     {
-      resolve: 'gatsby-plugin-robots-txt',
+      resolve: "gatsby-plugin-robots-txt",
       options: {
-        host: 'https://www.fullstacks.blog',
-        sitemap: 'https://www.fullstacks.blog/sitemap/sitemap-index.xml',
-        policy: [{userAgent: '*', allow: '/'}]
-      }
-    }
+        host: "https://www.fullstacks.blog",
+        sitemap: "https://www.fullstacks.blog/sitemap/sitemap-index.xml",
+        policy: [{ userAgent: "*", allow: "/" }],
+      },
+    },
+    {
+      resolve: `gatsby-plugin-minify`,
+      options: {
+        removeAttributeQuotes: true,
+        collapseWhitespace: true,
+        minifyCSS: true,
+        minifyJS: true,
+        removeComments: true,
+        removeEmptyAttributes: true,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        processConditionalComments: true,
+      },
+    },
   ],
 }

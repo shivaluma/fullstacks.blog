@@ -12,11 +12,11 @@ const Layout = ({ location, title, children }) => {
 
     header = (
       <h1>
-        <Link className="text-2xl" to="/">{title}</Link>
+        <Link className="text-2xl text-gray-50" to="/">{title}</Link>
       </h1>
     )
 
-    sidebar = <div className="flex flex-col py-8 px-8 sm:max-w-xs sm:px-4 bg-zinc-100 h-full items-end">
+    sidebar = <div className="flex flex-col py-8 px-8 sm:max-w-xs sm:px-4 sidebar-bg h-screen items-end top-0 left-0 fixed">
       <Bio header={header} />
     </div>
 
@@ -25,9 +25,9 @@ const Layout = ({ location, title, children }) => {
   }
 
   return (
-    <div className="flex h-auto sm:h-screen flex-col sm:flex-row" data-is-root-path={isRootPath}>
+    <div className="flex relative flex-col sm:flex-row flex-1 h-screen max-h-screen" data-is-root-path={isRootPath}>
       {sidebar}
-      <main className={`p-5 ${!isRootPath ? 'mx-auto' : ''}`}>{children}</main>
+      <main className={`p-5 ${!isRootPath ? 'mx-auto bg-inherit' : 'ml-80 overflow-y-auto w-full'} `}>{children}</main>
 
     </div>
   )
