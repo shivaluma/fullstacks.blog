@@ -105,7 +105,7 @@
     "Helvetica Neue", Arial, sans-serif;
   --font-family-heading: "Merriweather", -apple-system, BlinkMacSystemFont,
     "Helvetica Neue", Arial, sans-serif;
-  --font-family-monospace: "IBM Plex Mono", Menlo, monospace;
+  --font-family-monospace: "SF Mono", Menlo, monospace;
   --function: #76d4d6;
   --gray-0: #f8f9fa;
   --gray-1: #f1f3f5;
@@ -580,6 +580,16 @@ a:focus {
 .markdown-body samp {
   font-family: monospace,monospace;
   font-size: 1em;
+  background-color: #161b22 !important;
+}
+
+code[class*=language-], pre[class*=language-] {
+  text-shadow: none !important;
+  font-family: var(--font-family-monospace) !important;
+}
+
+span.token {
+  background: transparent !important;
 }
 
 .markdown-body figure {
