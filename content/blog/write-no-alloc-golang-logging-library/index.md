@@ -165,3 +165,234 @@ func Fatal(msg string) {
 	putEvent(e)
 }
 ```
+
+
+What is changed here compared to the above example is that sync.Pool is used to get and put the event struct, and buf values are appended to event buf field which is set to zero without assignment.
+
+1. Get and Put the event struct using sync.Pool
+2. After setting length to zero without assigning to the buf field of event, append
+
+First, define sync.Pool to pool the event instance. Here, in the New func definition, the initial capacity of the buf field is set to 500 bytes.
+
+```go
+var eventPool = &sync.Pool{
+	New: func() interface{} {
+		return &event{
+			buf: make([]byte, 0, 500),
+		}
+	},
+}
+```
+
+Get an event instance from sync.Pool with newEvent func, set the length of the acquired event.buf to 0, and then append the contents of buf.
+
+```go
+func newEvent(buf []byte, level Level, done func(b []byte)) *event {
+	e := eventPool.Get().(*event)
+	e.buf = e.buf[:0]
+	e.buf = append(e.buf, buf...)
+```
+
+
+Execute eventPool.Put after executing write().
+
+```go
+func Info(msg string) {
+	e := newEvent([]byte(msg), InfoLevel, nil)
+	e.write()
+	putEvent(e)     // Internally eventPool.Put(e)
+```
+
+So messages within 500 bytes can continue to output logs without being newly allocated.
+
+If you run the same benchmark test as before, you can see that the allocation for each operation is zero.
+
+
+```go
+BenchmarkEvent-16   54997969   19.17 ns/op   0 B/op   0 allocs/op
+```
+
+
+Strictly speaking, allocation has occurred. Looking at the result of escape analysis, you can see the result of escaping to the heap area as shown below.
+
+
+```go
+$ go build -gcflags '-m' event.go
+    :
+./event.go:53:10: &event{...} escapes to heap
+./event.go:54:13: make([]byte, 0, 500) escapes to heap
+```
+
+
+However, both of these refer to the processing in sync.Pool’s New func (event pointer generation and slice of byte generation). By being reused by sync.Pool, it can be seen in the benchmark test that it becomes almost zero in operation units.
+
+## In zerolog and zap
+
+
+The configuration of the interface for external access (various settings such as LogWriter and specification of writing of log events at each level) differs between the above logging library and zerolog, zap. Especially in zerolog, the logging event struct is used by the method chain. However, using sync.Pool for the logging event struct is the same to zerolog and zap.
+
+
+zerolog
+
+- [event struct](https://github.com/rs/zerolog/blob/fc26014bd4e123b44e490619c6aa61238175e8fa/event.go#L22)
+- [event pool](https://github.com/rs/zerolog/blob/fc26014bd4e123b44e490619c6aa61238175e8fa/event.go#L12)
+
+zap
+
+- [zapcore.Entry](https://github.com/uber-go/zap/blob/2e615d88d0eb88c94c15f196a538dea3fa181451/zapcore/entry.go#L145)
+- [buffer Pool](https://github.com/uber-go/zap/blob/0746adf5414f2781eb05c41ab270857fa1082db6/buffer/pool.go)
+- [Getting from sync.Pool and Casting](https://github.com/uber-go/zap/blob/56b4e2bfacf31ffeaa2d3ec7bee4fdb8485f81cc/zapcore/entry.go#L45)
+
+
+## Other features of Go’s zero allocation
+The above is a very simple example, but in reality, there may be cases where you want to have Time information or other information in the event struct field other than the output message.
+
+However, note that using sync.Pool does not result in zero allocation for all programs.
+
+
+## Do not use pointers
+- The existence of new declarations for pointer variables can cause dynamic allocation
+- Therefore, in this logging library example, the event pointer is targeted for sync.Pool and reused.
+- event struct does not have a pointer field
+
+
+## Using slice
+- Dynamic allocation occurs at the timing of initializing slice
+- When appending to slice, a new allocation will occur if capacity is exceeded.
+- A new allocation will occur even if a new slice type variable is assigned to a slice type variable.
+- Using array (fixed number of elements) is better, if possible.
+
+When using slice repeatedly, it is better to set capacity with New func of sync.Pool as in the example of eventPool, get from sync.Pool, set the length of slice to 0, and then append.
+
+
+## Use of anonymous functions also causes dynamic allocation
+Dynamic allocation occurs when defining and using anonymous functions. I think it is better to avoid it in the process that you use each time.
+
+In case an anonymous function in Fatal as shown below, func literal escapes to heap will appear in escape analysis.
+
+
+```go
+func Fatal(err error) {
+	e := newEvent(
+		[]byte(err.Error()), 
+		FatalLevel, 
+		func(b []byte) { os.Exit(1) },
+	)
+	e.write()
+}
+# result of go build -gcflags '-m'
+./event.go:99:3: func literal escapes to heap
+```
+
+
+## time.Time uses pointers internally
+
+Location (time zone information) has a pointer in the field.
+
+A new dynamic allocation occurs when you define and use a new Location (other than UTC, Local) that has not been previously defined.
+
+```go
+tm = time.Time{} // no allocation
+tm = time.Now().In(time.UTC) // no allocation
+utc, _ := time.LoadLocation("UTC") // no allocation
+tm = time.Now().In(utc) // no allocation
+local, _ := time.LoadLocation("Local") // no allocation
+tm = time.Now().In(local) // no allocation
+tm = time.Now().In(time.Local) // no allocation
+vnt, _ := time.LoadLocation("Asia/Ho_Chi_Minh") // allocation occurs
+tm = time.Now().In(vnt)
+```
+
+
+It is recommended to define the Location for JST in advance and substitute it instead of executing `time.LoadLocation ("Asia / Ho_Chi_Minh ")` in the process that occurs each time. (It is even better to assign it to time.Local in advance)
+
+There are other methods as below:
+- Treat as a Unix Time integer
+-Convert to []byte
+- If you use func (Time) AppendFormat to convert to []byte, if the capacity of the argument is sufficient, write directly and new memory Avoid allocation
+- [Usage on zerolog](https://github.com/rs/zerolog/blob/fc26014bd4e123b44e490619c6aa61238175e8fa/event.go#L660)
+
+
+## interface
+
+I would also like to mention the use of interface. It is not necessary as a log library, but I verified the case where the above code using sync.Pool was intentionally treated as an eventInterface interface as shown below.
+
+```go
+type eventInterface interface {
+	write()
+}
+func newEventInterface(buf []byte, level Level, done func(b []byte)) eventInterface {
+	return newEvent(buf, level, done) // sync.PoolGet
+}
+func putEventInterface(e eventInterface) {
+	if _, ok := e.(*event); !ok {
+		panic("invalid type")
+	}
+	eventPool.Put(e)
+}
+func Info(msg string) {
+	e := newEventInterface([]byte(msg), InfoLevel, nil)
+	e.write()
+	putEventInterface(e)
+}
+```
+
+
+This is the result of the benchmark test under go1.17, go1.18 environment. `BenchmarkEvent-16` is the one using only the event struct. `BenchmarkEventWithInterface-16` is the one using interface. As a result, no allocation was found.
+
+
+```
+BenchmarkEvent-16                63091771   17.45 ns/op   0 B/op   0 allocs/op
+BenchmarkEventWithInterface-16   61353092   17.18 ns/op   0 B/op   0 allocs/op
+```
+
+
+Also, the result of `go build -gcflags'-m'` is also the allocation of the cast argument of panic, so I couldn't see any increase in the allocation of interface usage itself.
+```
+./interface.go:13:8: "invalid type" escapes to heap
+```
+
+
+## Memory allocation changes depending on Go version
+Go allocation rules are not specified in the language specification. The allocation will change due to compiler modifications in Go version Up.
+
+We compared the above interface example including the case where sync.Pool is not used.
+
+
+!(compareversion)[https://miro.medium.com/max/1400/1*2fe3sGjJS4qZZeoKtXvE4w.png]
+
+
+If you use interface without sync.Pool, you can see that the allocation is increased, but it is noteworthy that the allocation is further increased depending on the version of Go.
+
+Also, if you look at the escape analysis when sync.Pool is not used, you can see that the result changes depending on the version of Go.
+
+
+```go
+# go 1.17
+./interface.go:8:17: &event{...} escapes to heap
+./interface.go:13:31: ([]byte)(msg) escapes to heap
+# go 1.13
+./interface.go:8:17: newEvent(buf, level, done) escapes to heap
+./interface.go:8:17: &event literal escapes to heap
+./interface.go:13:31: ([]byte)(msg) escapes to heap
+./interface.go:13:24: newEvent(buf, level, done) escapes to heap
+./interface.go:13:24: &event literal escapes to heap
+```
+
+
+## Summarize
+1. Gather logging event information into a struct and Put/Get it in sync.Pool for use
+2. When using the slice type, set a specific capacity and create it in the New func of sync.Pool. Set length to 0 after Get, then append and reuse
+3. Do not use pointers except for storage in sync.Pool. Also, no pointer field is provided in the struct to be stored.
+4. Avoid using anonymous functions in operations that occur each time
+5. time.Time uses a pointer for timezone information. So you need one of the following:
+When using a time zone other than UTC or Local, define it before using the log
+Convert to UnixTime integer or []byte
+6. The use of interface itself does not show dynamic allocation, but the implementation does sync.Pool
+7. Memory allocation varies greatly depending on Go version
+In addition to the usage of the logging library, I think that it can be used for another system which a large number of elements are created and destroyed during the process.
+
+However, I think that it is difficult to write source code that avoids dynamic allocation just by recognizing features unless you understand the contents of the compiler. Whether or not dynamic allocation occurs when escape analysis is actually performed may vary very delicately depending on how the code is written.
+
+Also, as noted above, Go’s allocation rules are not defined in the language specification.
+This article is based on zap, zerolog and the results of [this](https://github.com/muroon/zero-alloc-log) implementation in go 1.17 and go 1.18 environments. I hope that you will refer to it as one of the achievements. The most important thing is to actually check the allocation on your application.
