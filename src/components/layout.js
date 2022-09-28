@@ -9,14 +9,13 @@ const Layout = ({ location, title, children }) => {
   let sidebar
   if (isRootPath) {
 
-
     header = (
       <h1>
         <Link className="text-2xl text-gray-50" to="/">{title}</Link>
       </h1>
     )
 
-    sidebar = <div className="flex flex-col py-8 px-8 sm:max-w-xs sm:px-4 sidebar-bg h-screen items-end top-0 left-0 fixed">
+    sidebar = <div className="fixed top-0 left-0 flex flex-col items-end h-screen px-8 py-8 sm:max-w-xs sm:px-4 sidebar-bg">
       <Bio header={header} />
     </div>
 
@@ -25,9 +24,13 @@ const Layout = ({ location, title, children }) => {
   }
 
   return (
-    <div className="flex relative flex-col sm:flex-row flex-1 h-screen max-h-screen" data-is-root-path={isRootPath}>
-      {sidebar}
-      <main className={`p-5 ${!isRootPath ? 'mx-auto bg-inherit' : 'ml-80 overflow-y-auto w-full'} `}>{children}</main>
+    <div className="flex-1 h-screen max-h-screen" data-is-root-path={isRootPath}>
+      <header className="w-full py-2 bg-zinc-800">
+        <div className="container max-w-4xl px-4 mx-auto text-gray-100">
+          <Link className="text-lg text-gray-50" to="/">{title}</Link>
+        </div>
+      </header>
+      <main className={`p-5 mx-auto bg-inherit max-w-4xl`}>{children}</main>
 
     </div>
   )

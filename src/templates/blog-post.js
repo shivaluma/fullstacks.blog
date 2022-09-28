@@ -30,7 +30,7 @@ const BlogPostTemplate = ({ data, location }) => {
       />
       <article
         itemScope
-        className="container max-w-2xl mt-16"
+        className="mt-16"
         itemType="http://schema.org/Article"
       >
 
@@ -54,7 +54,7 @@ const BlogPostTemplate = ({ data, location }) => {
       </article>
       <nav className="blog-post-nav">
         <ul
-          className="flex justify-between list-stype-none p-0"
+          className="flex justify-between p-0 list-stype-none"
         >
           <li>
             {previous && (
