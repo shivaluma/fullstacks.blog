@@ -1,12 +1,9 @@
-
 ---
 title: Go's Advanced Concurrency Patterns
 date: "2022-09-29"
 description: Introduction to some advanced concurrency patterns in Go.
 tags: ["go", "golang"]
 ---
-
-
 
 # Advanced Concurrency Patterns
 
