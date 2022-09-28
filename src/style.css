@@ -8,12 +8,32 @@
   font-weight: 400
 }
 
+@font-face {
+  font-family: "Bitstream";
+  src: url("./@font-face/ee2d6efb70dae6b477d30df1fd294972.eot"); /* IE9*/
+  src: url("./@font-face/ee2d6efb70dae6b477d30df1fd294972.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+  url("./@font-face/ee2d6efb70dae6b477d30df1fd294972.woff2") format("woff2"), /* chrome、firefox *//* chrome、firefox */
+  url("./@font-face/ee2d6efb70dae6b477d30df1fd294972.ttf") format("truetype"); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  font-weight: 600
+}
+
+@font-face {
+  font-family: "Bitstream";
+  src: url("./@font-face/52c43308ef5fba1b49f67033714a87ec.eot"); /* IE9*/
+  src: url("./@font-face/52c43308ef5fba1b49f67033714a87ec.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+  url("./@font-face/52c43308ef5fba1b49f67033714a87ec.woff2") format("woff2"), /* chrome、firefox *//* chrome、firefox */
+  url("./@font-face/52c43308ef5fba1b49f67033714a87ec.ttf") format("truetype"); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  font-weight: 700
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 
 :root {
+  --header-background: rgb(22, 27, 34);;
+
   --maxWidth-none: "none";
   --maxWidth-xs: 20rem;
   --maxWidth-sm: 24rem;
@@ -728,7 +748,7 @@ span.token {
   margin-bottom: 16px;
   font-weight: 600;
   line-height: 1.25;
-  color: var(--font-color-hero-heading) !important;
+  color: var(--gray-4) !important;
 }
 
 .markdown-body h2 {
@@ -1427,7 +1447,26 @@ span.token {
   background-color: var(--navbar)
 }
 
+.header-bg {
+  background-color: var(--header-background);
+}
+
 
 header p {
   color: var(--gray-3);
+}
+
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
 }

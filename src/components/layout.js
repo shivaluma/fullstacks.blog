@@ -25,9 +25,9 @@ const Layout = ({ location, title, children }) => {
 
   return (
     <div className="flex-1 h-screen max-h-screen" data-is-root-path={isRootPath}>
-      <header className="w-full py-2 bg-zinc-800">
-        <div className="container max-w-4xl px-4 mx-auto text-gray-100">
-          <Link className="text-lg text-gray-50" to="/">{title}</Link>
+      <header className="w-full py-5 header-bg">
+        <div className="container max-w-4xl px-5 mx-auto text-gray-100">
+          <Link className="font-bold text-gray-200 text-md" to="/">{title} <span class="text-stone-300 inline-block animate-blink">▮</span></Link>
         </div>
       </header>
       <main className={`p-5 mx-auto bg-inherit max-w-4xl`}>{children}</main>
