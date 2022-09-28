@@ -308,7 +308,7 @@ It is recommended to define the Location for JST in advance and substitute it in
 
 There are other methods as below:
 - Treat as a Unix Time integer
--Convert to []byte
+- Convert to []byte
 - If you use func (Time) AppendFormat to convert to []byte, if the capacity of the argument is sufficient, write directly and new memory Avoid allocation
 - [Usage on zerolog](https://github.com/rs/zerolog/blob/fc26014bd4e123b44e490619c6aa61238175e8fa/event.go#L660)
 
@@ -359,7 +359,7 @@ Go allocation rules are not specified in the language specification. The allocat
 We compared the above interface example including the case where sync.Pool is not used.
 
 
-!(compareversion)[https://miro.medium.com/max/1400/1*2fe3sGjJS4qZZeoKtXvE4w.png]
+![compareversion](https://miro.medium.com/max/1400/1*2fe3sGjJS4qZZeoKtXvE4w.png)
 
 
 If you use interface without sync.Pool, you can see that the allocation is increased, but it is noteworthy that the allocation is further increased depending on the version of Go.
