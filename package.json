@@ -20,6 +20,7 @@
     "gatsby-plugin-robots-txt": "^1.7.1",
     "gatsby-plugin-sharp": "^4.23.1",
     "gatsby-plugin-sitemap": "^5.23.1",
+    "gatsby-plugin-zopfli": "^2.0.0",
     "gatsby-remark-copy-linked-files": "^5.23.0",
     "gatsby-remark-images": "^6.23.1",
     "gatsby-remark-prismjs": "^6.23.0",

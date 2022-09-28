@@ -149,5 +149,8 @@ module.exports = {
         processConditionalComments: true,
       },
     },
+    {
+      resolve: 'gatsby-plugin-zopfli'
+    }
   ],
 }
