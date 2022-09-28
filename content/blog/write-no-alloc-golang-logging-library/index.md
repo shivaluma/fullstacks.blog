@@ -396,3 +396,6 @@ However, I think that it is difficult to write source code that avoids dynamic a
 
 Also, as noted above, Go’s allocation rules are not defined in the language specification.
 This article is based on zap, zerolog and the results of [this](https://github.com/muroon/zero-alloc-log) implementation in go 1.17 and go 1.18 environments. I hope that you will refer to it as one of the achievements. The most important thing is to actually check the allocation on your application.
+
+
+Source: https://medium.com/@muroon/the-reason-why-zap-and-zerolog-make-it-zero-allocation-3ee8f69f660
