@@ -148,9 +148,6 @@ module.exports = {
         removeStyleLinkTypeAttributes: true,
         processConditionalComments: true,
       },
-    },
-    {
-      resolve: 'gatsby-plugin-zopfli'
     }
   ],
 }
