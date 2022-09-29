@@ -5,7 +5,7 @@ description: Introduction to some advanced concurrency patterns in Go.
 tags: ["go", "golang"]
 ---
 
-# Advanced Concurrency Patterns
+## Advanced Concurrency Patterns
 
 In this tutorial, we will discuss some advanced concurrency patterns in Go. Often, these patterns are used in combination in the real world.
 
